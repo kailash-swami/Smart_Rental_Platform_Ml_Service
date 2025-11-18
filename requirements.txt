@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+pandas
+joblib
+catboost==1.2.2     # or the CatBoost version you used to create the model. If unknown, try 1.2.2 or the version used during training.
+scikit-learn==1.3.2 # only necessary if your preprocessor depends on sklearn internals; adjust to the version used to create preprocessing_scaled.joblib
+numpy
