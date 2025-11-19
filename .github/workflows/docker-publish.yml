@@ -8,10 +8,20 @@ on:
 
 jobs:
   build:
+    # Only run if:
+    # - event is a push; OR
+    # - event is a pull_request AND the PR branch is in the same repository (not from a fork).
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Debug secrets presence
+        run: |
+          echo "DOCKERHUB_USERNAME present: ${{ secrets.DOCKERHUB_USERNAME != '' }}"
+          echo "DOCKERHUB_TOKEN present: ${{ secrets.DOCKERHUB_TOKEN != '' }}"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -27,4 +37,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/smart_rental_platform_ml_service:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/smart_rental_platform_ml_service:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/smart_rental_platform_ml_service:${{ github.sha }}
