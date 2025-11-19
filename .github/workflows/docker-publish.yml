@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Check if PR is from a fork
+        run: echo "Fork? -> ${{ github.event.pull_request.head.repo.fork }}"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
